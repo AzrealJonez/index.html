@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Score Counter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: transparent;
+            color: #61dafb;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        #score {
+            font-size: 48px;
+            margin: 20px;
+            color: #61dafb;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            animation: scale-up 0.3s ease-out;
+        }
+
+        button {
+            font-size: 18px;
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #61dafb;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease-out;
+        }
+
+        button:hover {
+            background-color: rgba(97, 218, 251, 0.1);
+        }
+
+        @keyframes scale-up {
+            from {
+                transform: scale(0.8);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Cool Score Counter</h1>
+<div id="score">0</div>
+<button onclick="increaseScore()">Increase Score</button>
+<button onclick="decreaseScore()">Decrease Score</button>
+
+<script>
+    let score = 0;
+
+    function updateScore() {
+        document.getElementById("score").innerText = score;
+    }
+
+    function increaseScore() {
+        score += 1; // You can adjust the points as needed
+        updateScore();
+    }
+
+    function decreaseScore() {
+        score -= 1; // You can adjust the points as needed
+        if (score < 0) {
+            score = 0;
+        }
+        updateScore();
+    }
+</script>
+
+</body>
+</html>
