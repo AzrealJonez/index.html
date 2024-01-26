@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Street Fighter Life Bar</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #222;
+    }
+
+    .life-bar {
+      display: flex;
+      cursor: pointer;
+    }
+
+    .life-section {
+      width: 30px;
+      height: 30px;
+      margin-right: 2px;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .reset-button {
+      margin-top: 20px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    /* Colors inspired by Street Fighter */
+    .life-section:nth-child(1) { background-color: #FF0000; }
+    .life-section:nth-child(2) { background-color: #FF0000; }
+    .life-section:nth-child(3) { background-color: #FF0000; }
+    .life-section:nth-child(4) { background-color: #FFFF00; }
+    .life-section:nth-child(5) { background-color: #FFFF00; }
+    .life-section:nth-child(6) { background-color: #FFFF00; }
+    .life-section:nth-child(7) { background-color: #00FF00; }
+    .life-section:nth-child(8) { background-color: #00FF00; }
+    .life-section:nth-child(9) { background-color: #00FF00; }
+  </style>
+</head>
+<body>
+
+<div class="life-bar" onclick="removeLifeSection(event)">
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+  <div class="life-section"></div>
+</div>
+
+<button class="reset-button" onclick="resetLifeBar()">Reset Life Bar</button>
+
+<script>
+  function removeLifeSection(event) {
+    const lifeBar = document.querySelector('.life-bar');
+    const firstSection = lifeBar.firstElementChild;
+
+    if (firstSection) {
+      firstSection.style.transform = 'scaleX(0)';
+      setTimeout(() => {
+        lifeBar.removeChild(firstSection);
+      }, 300); // Adjust the transition duration in milliseconds
+    }
+  }
+
+  function resetLifeBar() {
+    const lifeBar = document.querySelector('.life-bar');
+
+    // Remove all existing sections
+    while (lifeBar.firstChild) {
+      lifeBar.removeChild(lifeBar.firstChild);
+    }
+
+    // Create new sections
+    for (let i = 0; i < 9; i++) {
+      const section = document.createElement('div');
+      section.className = 'life-section';
+      lifeBar.appendChild(section);
+    }
+  }
+</script>
+
+</body>
+</html>
