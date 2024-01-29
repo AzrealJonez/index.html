@@ -58,7 +58,7 @@
         function addPoint() {
             let pointsInput = document.getElementById('points-input');
             let currentPoints = parseInt(pointsInput.value) || 0;
-            pointsInput.value = currentPoints + 1;
+            pointsInput.value = currentPoints + 5;
         }
 
         function subtractPoint() {
@@ -66,7 +66,7 @@
             let currentPoints = parseInt(pointsInput.value) || 0;
             
             if (currentPoints > 0) {
-                pointsInput.value = currentPoints - 1;
+                pointsInput.value = currentPoints - 5;
             }
         }
     </script>
