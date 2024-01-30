@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Card Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #bingo-board {
+            display: grid;
+	    align-self: center;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 300px;
+            margin: auto;
+        }
+
+        .bingo-cell {
+            border: 2px solid #333;
+	    width: 250px;
+            height: 250px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .bingo-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bingo-cell.clicked {
+            background-color: #aaf;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        select {
+            font-size: 16px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bingo Card Generator</h1>
+    <label for="category">Select Category:</label>
+    <select id="category">
+        <option value="Category1">Category 1</option>
+        <option value="Category2">Category 2</option>
+        <!-- Add more categories as needed -->
+    </select>
+    <button onclick="generateBingoCard()">Generate Bingo Card</button>
+    <div id="bingo-board"></div>
+
+    <script>
+        const categories = {
+            'Category1': ['Teacher.png', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'Teacher.png', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'Teacher.png', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'Teacher.png', 'image2.jpg', 'image3.jpg', 'image4.jpg'],
+            'Category2': ['image4.jpg', 'image5.jpg', 'image6.jpg'],
+            // Add more categories and images as needed
+        };
+
+        function getRandomItem(category) {
+            const randomIndex = Math.floor(Math.random() * category.length);
+            return category.splice(randomIndex, 1)[0];
+        }
+
+        function generateBingoCard() {
+            const selectedCategory = document.getElementById('category').value;
+            const boardContainer = document.getElementById('bingo-board');
+            boardContainer.innerHTML = '';
+
+            const shuffledItems = [...categories[selectedCategory]];
+
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    const item = getRandomItem(shuffledItems);
+
+                    const cell = document.createElement('div');
+                    cell.className = 'bingo-cell';
+                    cell.innerHTML = `<img src="${item}" alt="Image">`;
+                    cell.addEventListener('click', () => toggleCellColor(cell));
+
+                    boardContainer.appendChild(cell);
+                }
+            }
+        }
+
+        function toggleCellColor(cell) {
+            cell.classList.toggle('clicked');
+        }
+    </script>
+</body>
+</html>
+
