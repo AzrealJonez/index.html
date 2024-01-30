@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jigsaw Puzzle Generator</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        #puzzle-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .puzzle-piece {
+            position: absolute;
+            border: 2px solid #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="upload" accept="image/*" onchange="handleFileSelect()">
+    <div id="puzzle-container"></div>
+    
+    <script>
+        let imageUrl = "";
+
+        function handleFileSelect() {
+            const input = document.getElementById('upload');
+            const container = document.getElementById('puzzle-container');
+            container.innerHTML = '';
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imageUrl = e.target.result;
+                    generatePuzzle(imageUrl);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function generatePuzzle(imageUrl) {
+            const container = document.getElementById('puzzle-container');
+            const pieces = 12;
+            const pieceSize = 100;
+
+            for (let i = 0; i < pieces; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'puzzle-piece';
+                piece.style.width = `${pieceSize}px`;
+                piece.style.height = `${pieceSize}px`;
+
+                const xPos = (i % 4) * pieceSize;
+                const yPos = Math.floor(i / 4) * pieceSize;
+
+                piece.style.backgroundImage = `url(${imageUrl})`;
+                piece.style.backgroundSize = '400px 400px';
+                piece.style.backgroundPosition = `-${xPos}px -${yPos}px`;
+                piece.style.left = `${xPos}px`;
+                piece.style.top = `${yPos}px`;
+
+                container.appendChild(piece);
+
+                // Capture each puzzle piece as an image and provide a download link
+                captureAndDownload(piece, i + 1);
+            }
+        }
+
+        function captureAndDownload(element, pieceNumber) {
+            html2canvas(element).then(canvas => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL();
+                link.download = `piece_${pieceNumber}.png`;
+                link.innerHTML = `Download Piece ${pieceNumber}`;
+                document.body.appendChild(link);
+                document.body.appendChild(document.createElement("br"));
+            });
+        }
+    </script>
+</body>
+</html>
