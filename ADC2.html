@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attack and Defense Counter</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .counter {
+            position: relative;
+            width: 100px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .attack {
+            background-color: #e74c3c;
+            border: 3px solid #fff;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .defense {
+            background-color: #27ae60;
+            border: 3px solid #fff;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .counter:hover {
+            background-color: #34495e;
+        }
+
+        .counter:before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 87px solid transparent;
+            top: -87px;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="counter attack" id="attackCounter" onclick="changeCounter('attack')">Attack: <span id="attackValue">0</span></div>
+<div class="counter defense" id="defenseCounter" onclick="changeCounter('defense')">Defense: <span id="defenseValue">0</span></div>
+
+<script>
+    function changeCounter(type) {
+        const counterElement = document.getElementById(`${type}Counter`);
+        const valueElement = document.getElementById(`${type}Value`);
+        let currentValue = parseInt(valueElement.innerText);
+
+        // Increase or decrease the counter by 1
+        if (event.ctrlKey) {
+            // Decrease by 1 with Ctrl key pressed
+            currentValue = Math.max(currentValue - 1, 0);
+        } else {
+            // Increase by 1
+            currentValue++;
+        }
+
+        // Update the counter value
+        valueElement.innerText = currentValue;
+    }
+</script>
+
+</body>
+</html>
