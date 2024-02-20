@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Question Generator</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: white;
+	    font-size: 50px;
+        }
+
+        #question-container {
+            position: relative;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: white;
+            color: black;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #random-question-button {
+            padding: 10px 20px;
+            font-size: 32px;
+            cursor: pointer;
+            border: none;
+            background-color: blue;
+            color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="question-container">
+        <p id="question-text">Click the button to get a random question!</p>
+        <button id="random-question-button" onclick="generateRandomQuestion()">Question</button>
+    </div>
+
+    <script>
+        // Define an array of questions
+        const questions = [
+            "What do you want to be?,
+            "What do you want to study?",
+            "What club do you want to join?",
+            "What's your best memory?",
+            "What did you eat on the school trip?",
+            "What did you see on the school trip",
+            "What did you eat on the field trip?",
+            "What did you see on the field trip",
+            "How was sports day?",
+            "How was your summer vacation?",
+            "How was the school trip?,
+            "How was your winter vacation?",
+            "What's 卒業式?",
+            "What's 入学式?",
+            "What's 運動会?",
+            "What's your best memory?,
+            "What do you want to be?,
+            "What do you want to study?",
+            "What club do you want to join?",
+            // Add more questions as needed
+        ];
+
+        // Function to generate a random question
+        function generateRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const randomQuestion = questions[randomIndex];
+            document.getElementById('question-text').innerText = randomQuestion;
+        }
+    </script>
+</body>
+</html>

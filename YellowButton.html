@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Question Generator</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: white;
+	    font-size: 50px;
+        }
+
+        #question-container {
+            position: relative;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: white;
+            color: black;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #random-question-button {
+            padding: 10px 20px;
+            font-size: 32px;
+            cursor: pointer;
+            border: none;
+            background-color: yellow;
+            color: black;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="question-container">
+        <p id="question-text">Click the button to get a random question!</p>
+        <button id="random-question-button" onclick="generateRandomQuestion()">Question</button>
+    </div>
+
+    <script>
+        // Define an array of questions
+        const questions = [
+            "Where do bears live?",
+            "What do bears eat?",
+            "Where do gorillas live?",
+            "What do gorillas eat?",
+            "Where do sea turtles live?",
+            "What do sea turtles eat?",
+            "Where do rabbits live?",
+            "What do rabbits eat?",
+            "What food group is meat in?",
+            "What food group is fish in?",
+            "What food group is chicken in?",
+            "What food group are potatoes in?",
+            "What food group are onions in?",
+            "What food group are pineapples in?",
+            "What foood group are peaches in?",
+            "What did you eat for dinner last night?"
+            "What do you usually eat for dinner?",
+
+            // Add more questions as needed
+        ];
+
+        // Function to generate a random question
+        function generateRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const randomQuestion = questions[randomIndex];
+            document.getElementById('question-text').innerText = randomQuestion;
+        }
+    </script>
+</body>
+</html>

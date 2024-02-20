@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Question Generator</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: white;
+	    font-size: 50px;
+        }
+
+        #question-container {
+            position: relative;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: white;
+            color: black;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #random-question-button {
+            padding: 10px 20px;
+            font-size: 32px;
+            cursor: pointer;
+            border: none;
+            background-color: red;
+            color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="question-container">
+        <p id="question-text">Click the button to get a random question!</p>
+        <button id="random-question-button" onclick="generateRandomQuestion()">Question</button>
+    </div>
+
+    <script>
+        // Define an array of questions
+        const questions = [
+            "Where do you want to go?",
+            "What can you eat in Italy?",
+            "What can you see in Italy?",
+            "What can you eat in Egypt?",
+            "What can you see in Egypt?",
+            "What can you eat in France?",
+            "What can you see in France?",
+            "What can you eat in America?",
+            "What can you see in America?",
+            "What can you eat in Australia?",
+            "What can you see in Australia?",
+            "What can you eat in China?",
+            "What can you see in China?",
+            "How was your summer vacation?",
+            "How was your winter vacation?",
+            "Where did you go for summer vacation?",
+            "Where did you go for winter vacation?",
+            "Where did you eat during summer vacation?",
+            "Where did you eat during winter vacation?",
+            // Add more questions as needed
+        ];
+
+        // Function to generate a random question
+        function generateRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const randomQuestion = questions[randomIndex];
+            document.getElementById('question-text').innerText = randomQuestion;
+        }
+    </script>
+</body>
+</html>
