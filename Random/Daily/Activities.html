@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Answer Generator</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        #answer-container {
+            position: relative;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: #3498db;
+            color: #fff;
+            max-width: 400px;
+            text-align: center;
+	    font-size: 40px;
+        }
+
+        #random-answer-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #2ecc71;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        #answer-image {
+            width: 100%;
+            max-height: 300px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="answer-container">
+        <p id="answer-text">Click the button to get a random answer!</p>
+        <img src="" alt="" id="answer-image">
+        <button id="random-answer-button" onclick="generateRandomAnswer()">Answer</button>
+    </div>
+
+    <script>
+        // Define an array of answers and corresponding images
+        const answers = [
+            { text: "", image: "brushmyteeth.png" },
+            { text: "", image: "domyhomework.png" },
+            { text: "", image: "getthenewspaper.png" },
+            { text: "", image: "getup.png" },
+            { text: "", image: "gohome.png" },
+            { text: "", image: "gotobed.png" },
+            { text: "", image: "gotoschool.png" },
+            { text: "", image: "havebreakfast.png" },
+            { text: "", image: "havedinner.png" },
+            { text: "", image: "havelunch.png" },
+            { text: "", image: "playsoccer.png" },
+            { text: "", image: "studyEnglish.png" },
+            { text: "", image: "takeabath.png" },
+            { text: "", image: "takeoutthegarbage.png" },
+            { text: "", image: "walkmydog.png" },
+            { text: "", image: "washthedishes.png" },
+            { text: "", image: "watchTV.png" },
+
+            // Add more answers with their respective images
+        ];
+
+        // Function to generate a random answer and image
+        function generateRandomAnswer() {
+            const randomIndex = Math.floor(Math.random() * answers.length);
+            const randomAnswer = answers[randomIndex];
+
+            document.getElementById('answer-text').innerText = randomAnswer.text;
+            document.getElementById('answer-image').src = randomAnswer.image;
+        }
+    </script>
+</body>
+</html>
+ 
