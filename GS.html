@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Spinner</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #spinner {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        #arrow {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 40px 20px 0;
+            border-color: #00f transparent transparent transparent;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform-origin: 50% 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="spinner" onclick="spin()">
+        <div id="arrow"></div>
+    </div>
+
+    <script>
+        function spin() {
+            const spinner = document.getElementById('spinner');
+            const arrow = document.getElementById('arrow');
+            const rotationDegree = Math.floor(Math.random() * 360) + 3600; // Random degree between 3600 and 3960
+
+            spinner.style.transform = 'rotate(' + rotationDegree + 'deg)';
+        }
+    </script>
+</body>
+</html>
