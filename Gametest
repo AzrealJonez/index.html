@@ -1,0 +1,95 @@
+import pygame
+import random
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Set up the screen
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Word Ninja")
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+
+# Fonts
+FONT = pygame.font.Font(None, 36)
+
+# Words and Definitions
+words_definitions = {
+    "apple": "A round fruit with red or green skin and a whitish interior.",
+    "banana": "A long curved fruit that grows in clusters and has soft pulpy flesh.",
+    "orange": "A round juicy citrus fruit with a tough bright reddish-yellow rind.",
+    "grape": "A small, round, smooth-skinned fruit, growing in clusters on a grapevine.",
+    "kiwi": "A brown, hairy-skinned fruit with green flesh and black seeds.",
+    "pear": "A sweet yellowish- or brownish-green edible fruit that is typically narrow at the top and wider toward the base.",
+    "melon": "A large round fruit with sweet flesh and many seeds.",
+}
+
+# Game Variables
+word_speed = 1
+score = 0
+
+# Function to create a word
+def create_word():
+    word = random.choice(list(words_definitions.keys()))
+    word_surface = FONT.render(word, True, BLACK)
+    word_rect = word_surface.get_rect(x=random.randint(0, WIDTH - word_surface.get_width()), y=0)
+    return {"surface": word_surface, "rect": word_rect, "word": word}
+
+# Function to draw text on screen
+def draw_text(text, font, color, surface, x, y):
+    text_obj = font.render(text, True, color)
+    text_rect = text_obj.get_rect()
+    text_rect.topleft = (x, y)
+    surface.blit(text_obj, text_rect)
+
+# Main game loop
+clock = pygame.time.Clock()
+words = []
+
+while True:
+    screen.fill(WHITE)
+    
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Create new word occasionally
+    if random.randint(0, 100) < 3:
+        words.append(create_word())
+
+    # Move and draw words
+    for word in words:
+        word["rect"].move_ip(0, word_speed)
+        screen.blit(word["surface"], word["rect"])
+
+    # Remove words that have fallen off the screen
+    words = [word for word in words if word["rect"].top < HEIGHT]
+
+    # Draw score
+    draw_text("Score: " + str(score), FONT, BLACK, screen, 10, 10)
+
+    # Draw definitions
+    definitions_y = HEIGHT - 100
+    for word, definition in words_definitions.items():
+        draw_text(word + ": " + definition, FONT, BLACK, screen, 10, definitions_y)
+        definitions_y += 30
+
+    # Check for slicing
+    mouse_pos = pygame.mouse.get_pos()
+    sliced_words = [word for word in words if word["rect"].collidepoint(mouse_pos)]
+    for word in sliced_words:
+        words.remove(word)
+        score += 1
+
+    # Update the display
+    pygame.display.flip()
+
+    # Cap the frame rate
+    clock.tick(60)
