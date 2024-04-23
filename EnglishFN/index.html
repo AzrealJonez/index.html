@@ -20,14 +20,14 @@
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas" width="800" height="500"></canvas>
     <div id="hint" class="display"></div>
     <div id="life" class="display"></div>
     <div id="colorSelector">
         <label for="textColor">Text Color:</label>
         <select id="textColor">
-            <option value="black">Black</option>
-            <option value="white">White</option>
+            <option value="black">White</option>
+            <option value="white">Black</option>
             <option value="red">Red</option>
             <option value="blue">Blue</option>
             <option value="green">Green</option>
@@ -162,7 +162,7 @@
                 }
 
                 // Display score
-                ctx.fillStyle = "black"; // Set text color to black by default
+                ctx.fillStyle = "white"; // Set text color to black by default
                 ctx.font = "20px Arial";
                 ctx.fillText("Score: " + score, 20, 30);
 
