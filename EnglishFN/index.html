@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Ninja Click Game</title>
+    <style>
+        canvas {
+            border: 2px solid black;
+            display: block;
+            margin: 0 auto;
+        }
+        #hint {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        #life {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="hint"></div>
+    <div id="life"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.getElementById("gameCanvas");
+            const ctx = canvas.getContext("2d");
+
+            const FRUIT_SIZE = 90;
+            let FRUIT_SPEED = 1;
+            const FPS = 60;
+            let score = 0;
+            let lives = 5; // Set lives to 5
+
+            const fruits = [];
+
+            // Load fruit images
+            const fruitImages = {};
+            const imageNames = ["apple", "banana", "orange", "pineapple", "grape", "strawberry", "lemon", "watermelon", "cherry",]; // Add more image names as needed
+            const imageHints = {
+                "apple": "apple",
+                "banana": "banana",
+                "orange": "orange",
+                "pineapple": "pineapple",
+                "grape": "grape",
+                "strawberry": "strawberry",
+                "lemon": "lemon",
+                "watermelon": "watermelon",
+                "cherry": "cherry",
+            }; // Add hints for each image
+            imageNames.forEach(name => {
+                const img = new Image();
+                img.src = name + ".png"; // Assuming your images are named "apple.png", "banana.png", etc.
+                fruitImages[name] = img;
+            });
+
+            // Hint
+            const hintDiv = document.getElementById("hint");
+            let currentHint = getRandomHint();
+
+            // Life
+            const lifeDiv = document.getElementById("life");
+            lifeDiv.textContent = "Lives: " + "❤️".repeat(lives);
+
+            canvas.addEventListener("click", function (event) {
+                const mouseX = event.clientX - canvas.getBoundingClientRect().left;
+                const mouseY = event.clientY - canvas.getBoundingClientRect().top;
+                let fruitClicked = false;
+
+                for (let i = fruits.length - 1; i >= 0; i--) {
+                    const fruit = fruits[i];
+                    if (mouseX >= fruit.x && mouseX <= fruit.x + FRUIT_SIZE &&
+                        mouseY >= fruit.y && mouseY <= fruit.y + FRUIT_SIZE) {
+                        fruits.splice(i, 1);
+                        fruitClicked = true;
+                        if (fruit.name === currentHint) {
+                            score += 1;
+                            if (score % 5 === 0) {
+                                FRUIT_SPEED += 0.5;
+                            }
+                            currentHint = getRandomHint();
+                            hintDiv.textContent = "Click the " + imageHints[currentHint];
+                        } else {
+                            lives--;
+                            if (lives <= 0) {
+                                alert("Game Over! Your score: " + score);
+                                location.reload(); // Reload the page to restart the game
+                            } else {
+                                lifeDiv.textContent = "Lives: " + "❤️".repeat(lives);
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                if (!fruitClicked) {
+                    lives--;
+                    if (lives <= 0) {
+                        alert("Game Over! Your score: " + score);
+                        location.reload(); // Reload the page to restart the game
+                    } else {
+                        lifeDiv.textContent = "Lives: " + "❤️".repeat(lives);
+                    }
+                }
+            });
+
+            function Fruit(image, name) {
+                this.x = Math.random() * (canvas.width - FRUIT_SIZE);
+                this.y = -FRUIT_SIZE;
+                this.image = image;
+                this.name = name;
+            }
+
+            Fruit.prototype.update = function () {
+                this.y += FRUIT_SPEED;
+                if (this.y > canvas.height) {
+                    fruits.splice(fruits.indexOf(this), 1);
+                }
+            };
+
+            Fruit.prototype.draw = function () {
+                ctx.drawImage(this.image, this.x, this.y, FRUIT_SIZE, FRUIT_SIZE);
+            };
+
+            function getRandomHint() {
+                return imageNames[Math.floor(Math.random() * imageNames.length)];
+            }
+
+            function mainLoop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (Math.random() < 0.05) {
+                    const randomFruitName = getRandomHint();
+                    fruits.push(new Fruit(fruitImages[randomFruitName], randomFruitName));
+                }
+
+                for (let i = 0; i < fruits.length; i++) {
+                    const fruit = fruits[i];
+                    fruit.update();
+                    fruit.draw();
+                }
+
+                // Display score
+                ctx.fillStyle = "black";
+                ctx.font = "20px Arial";
+                ctx.fillText("Score: " + score, 20, 30);
+
+                requestAnimationFrame(mainLoop);
+            }
+
+            mainLoop();
+            hintDiv.textContent = "Hint:   " + imageHints[currentHint];
+        });
+    </script>
+</body>
+</html>
