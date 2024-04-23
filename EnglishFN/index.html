@@ -10,29 +10,36 @@
             display: block;
             margin: 0 auto;
         }
-        #hint {
+        #hint, #life {
             text-align: center;
             font-size: 24px;
-            margin-top: 10px;
         }
-        #life {
-            text-align: center;
-            margin-top: 10px;
+        .display {
+            color: black; /* Default font color */
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="hint"></div>
-    <div id="life"></div>
+    <div id="hint" class="display"></div>
+    <div id="life" class="display"></div>
+    <div id="colorSelector">
+        <label for="textColor">Text Color:</label>
+        <select id="textColor">
+            <option value="black">Black</option>
+            <option value="white">White</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+        </select>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const canvas = document.getElementById("gameCanvas");
             const ctx = canvas.getContext("2d");
 
-            const FRUIT_SIZE = 90;
+            const FRUIT_SIZE = 70;
             let FRUIT_SPEED = 1;
-            const FPS = 60;
             let score = 0;
             let lives = 5; // Set lives to 5
 
@@ -65,6 +72,16 @@
             // Life
             const lifeDiv = document.getElementById("life");
             lifeDiv.textContent = "Lives: " + "❤️".repeat(lives);
+
+            // Color Selector
+            const colorSelector = document.getElementById("textColor");
+            colorSelector.addEventListener("change", function () {
+                const selectedColor = colorSelector.value;
+                const displayElements = document.getElementsByClassName("display");
+                for (let i = 0; i < displayElements.length; i++) {
+                    displayElements[i].style.color = selectedColor;
+                }
+            });
 
             canvas.addEventListener("click", function (event) {
                 const mouseX = event.clientX - canvas.getBoundingClientRect().left;
@@ -145,7 +162,7 @@
                 }
 
                 // Display score
-                ctx.fillStyle = "black";
+                ctx.fillStyle = "black"; // Set text color to black by default
                 ctx.font = "20px Arial";
                 ctx.fillText("Score: " + score, 20, 30);
 
@@ -153,7 +170,7 @@
             }
 
             mainLoop();
-            hintDiv.textContent = "Hint:   " + imageHints[currentHint];
+            hintDiv.textContent = "Click the " + imageHints[currentHint];
         });
     </script>
 </body>
