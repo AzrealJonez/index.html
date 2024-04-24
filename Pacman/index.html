@@ -29,7 +29,7 @@
         const PACMAN_SPEED = 5;
         let ghostSpeed = 2; // Initial ghost speed
         const PELLET_RADIUS = 10;
-        const MAX_SCORE = 20;
+        const MAX_SCORE = 10;
         const INITIAL_HEARTS = 5;
         const CHASE_DISTANCE = 100; // Distance at which ghost starts chasing
         const CHASE_DURATION = 3000; // Duration of ghost chase in milliseconds
@@ -160,7 +160,7 @@
             for (let pellet of pellets) {
                 if (!pellet.eaten) {
                     ctx.fillStyle = 'white';
-                    ctx.font = '20px Arial';
+                    ctx.font = '18px Arial';
                     ctx.fillText(pellet.name, pellet.x - GRID_SIZE / 2, pellet.y + GRID_SIZE / 2);
                 }
             }
