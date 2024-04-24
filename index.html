@@ -1,39 +1,303 @@
-<HTML>
-<center>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacman Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            border: 1px solid black;
+            background-color: black;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
-	<H1>Broforce Resources</H1>
+        // Constants
+        const GRID_SIZE = 40;
+        const PACMAN_SPEED = 5;
+        let ghostSpeed = 2; // Initial ghost speed
+        const PELLET_RADIUS = 10;
+        const MAX_SCORE = 20;
+        const INITIAL_HEARTS = 5;
+        const CHASE_DISTANCE = 100; // Distance at which ghost starts chasing
+        const CHASE_DURATION = 3000; // Duration of ghost chase in milliseconds
 
-<p><a href="Scorecounter.html">Score Counter</a>
-<p><a href="SimpleCounter.html">Simple Counter</a>
-<p><a href="WhiteSimple.html">White Simple Counter</a>
-<p><a href="RedSimple.html">Red Simple Counter</a>
-<p><a href="5PSC.html">5 Player Score Counter</a>
-<p><a href="CustomeSB2.html">Custom Score Counter</a>
-<p><a href="Lifebar.html">Life Bar</a>
-<p><a href="JSP.html">Jigsaw puzzle maker</a>
-<p><a href="BGI.html">3x3 Bingo Generator</a>
-<p><a href="BGI2.html">4x4 Bingo Generator</a>
-<p><a href="AlienInvasion/AVH.html">Aliens Vs Humans Image Changer</a>
-<p><a href="ADC2.html">Attack and Defence Counter</a>
-<p><a href="RAS/RAS.html">Aliens Vs Humans Image Changer</a>
-<p><a href="GreenButton.html">Green Question Button</a>
-<p><a href="RedButton.html">Red Question Button</a>
-<p><a href="YellowButton.html">Yellow Question Button</a>
-<p><a href="BlueButton.html">Blue Question Button</a>
-<p><a href="Random/Sports/Sports.html">Sports Random Generator</a>
-<p><a href="Random/Daily/Activities.html">Daily Activities Generator</a>
-<p><a href="Random/Clubs/Clubs.html">Clubs Generator</a>
-<p><a href="Random/Jobs/Jobs.html">Jobs Generator</a>
+        // Load images
+        const pacmanLeftImg = new Image();
+        pacmanLeftImg.src = 'pacman-left.png';
 
-<p><a href="TextBox/BlackBox.html">Black Text Box</a>
-<p><a href="TextBox/BlueBox.html">Blue Text Box</a>
-<p><a href="TextBox/RedBox.html">Red Text Box</a>
-<p><a href="TextBox/WhiteBox.html">White Text Box</a>
-<p><a href="TextBox/YellowBox.html">Yellow Text Box</a>
-<p><a href="TextBox/PurpleBox.html">Purple Text Box</a>
-<p><a href="TextBox/GreenBox.html">Green Text Box</a>
-<p><a href="TextBox/OrangeBox.html">Orange Text Box</a>
+        const pacmanRightImg = new Image();
+        pacmanRightImg.src = 'pacman-right.png';
 
-	
-</center>
-</HTML>
+        const pacmanUpImg = new Image();
+        pacmanUpImg.src = 'pacman-up.png';
+
+        const pacmanDownImg = new Image();
+        pacmanDownImg.src = 'pacman-down.png';
+
+        const ghostImg = new Image();
+        ghostImg.src = 'ghost.png';
+
+        // Pellets and Questions
+        let pellets = [
+            { name: "Paris", x: 200, y: 200, eaten: false, question: "What is the capital of France?" },
+            { name: "London", x: 400, y: 100, eaten: false, question: "What is the capital of the United Kingdom?" },
+            { name: "Rome", x: 600, y: 300, eaten: false, question: "What is the capital of Italy?" },
+            { name: "Berlin", x: 100, y: 500, eaten: false, question: "What is the capital of Germany?" },
+            { name: "Madrid", x: 700, y: 400, eaten: false, question: "What is the capital of Spain?" },
+            { name: "DC", x: 200, y: 200, eaten: false, question: "What is the capital of the US?" }
+            // Add more questions here
+            // Example:
+            // { name: "Example", x: 300, y: 400, eaten: false, question: "Example question?" }
+        ];
+
+        // Score
+        let score = 0;
+
+        // Pacman position
+        let pacmanX = canvas.width / 2;
+        let pacmanY = canvas.height / 2;
+
+        // Ghost positions
+        let ghosts = [{ x: Math.random() * canvas.width, y: Math.random() * canvas.height }];
+
+        // Pacman direction
+        let pacmanDir = 'LEFT';
+
+        // Hearts
+        let hearts = INITIAL_HEARTS;
+
+        // Current question index
+        let currentQuestionIndex = 0;
+
+        // Ghost chasing state
+        let chasing = false;
+        let chaseTimer = null;
+
+        // Shuffle function
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Generate random positions for pellets
+        function generatePelletPositions() {
+            const positions = [];
+            for (let i = 0; i < pellets.length; i++) {
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                positions.push({ x, y });
+            }
+            return positions;
+        }
+
+        // Draw Pacman
+        function drawPacman() {
+            switch (pacmanDir) {
+                case 'LEFT':
+                    ctx.drawImage(pacmanLeftImg, pacmanX - GRID_SIZE / 2, pacmanY - GRID_SIZE / 2, GRID_SIZE, GRID_SIZE);
+                    break;
+                case 'RIGHT':
+                    ctx.drawImage(pacmanRightImg, pacmanX - GRID_SIZE / 2, pacmanY - GRID_SIZE / 2, GRID_SIZE, GRID_SIZE);
+                    break;
+                case 'UP':
+                    ctx.drawImage(pacmanUpImg, pacmanX - GRID_SIZE / 2, pacmanY - GRID_SIZE / 2, GRID_SIZE, GRID_SIZE);
+                    break;
+                case 'DOWN':
+                    ctx.drawImage(pacmanDownImg, pacmanX - GRID_SIZE / 2, pacmanY - GRID_SIZE / 2, GRID_SIZE, GRID_SIZE);
+                    break;
+            }
+        }
+
+        // Draw Ghosts
+        function drawGhosts() {
+            for (let ghost of ghosts) {
+                ctx.drawImage(ghostImg, ghost.x - GRID_SIZE / 2, ghost.y - GRID_SIZE / 2, GRID_SIZE, GRID_SIZE);
+            }
+        }
+
+        // Display Question
+        function displayQuestion(question) {
+            ctx.fillStyle = 'white';
+            ctx.font = '30px Arial';
+            ctx.fillText(question, 10, canvas.height - 20);
+        }
+
+        // Display Hearts
+        function displayHearts() {
+            let heartStr = '';
+            for (let i = 0; i < hearts; i++) {
+                heartStr += '♥ ';
+            }
+            ctx.fillStyle = 'red';
+            ctx.font = '24px Arial';
+            ctx.fillText(heartStr, canvas.width - 140, canvas.height - 20);
+        }
+
+        // Display Score
+        function displayScore() {
+            ctx.fillStyle = 'white';
+            ctx.font = '24px Arial';
+            ctx.fillText("Score: " + score, 10, 30);
+        }
+
+        // Draw Pellets
+        function drawPellets() {
+            for (let pellet of pellets) {
+                if (!pellet.eaten) {
+                    ctx.fillStyle = 'white';
+                    ctx.font = '20px Arial';
+                    ctx.fillText(pellet.name, pellet.x - GRID_SIZE / 2, pellet.y + GRID_SIZE / 2);
+                }
+            }
+        }
+
+        // Check collision between Pacman and a word
+        function checkCollision(x1, y1, x2, y2, r1, r2) {
+            const dx = x1 - x2;
+            const dy = y1 - y2;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            return distance < r1 + r2;
+        }
+
+        // Main game loop
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawPacman();
+            drawGhosts();
+            drawPellets();
+            displayScore();
+            displayHearts();
+            displayQuestion(pellets[currentQuestionIndex].question);
+
+            // Move Pacman
+            switch (pacmanDir) {
+                case 'LEFT':
+                    if (pacmanX > 0) pacmanX -= PACMAN_SPEED;
+                    break;
+                case 'RIGHT':
+                    if (pacmanX < canvas.width) pacmanX += PACMAN_SPEED;
+                    break;
+                case 'UP':
+                    if (pacmanY > 0) pacmanY -= PACMAN_SPEED;
+                    break;
+                case 'DOWN':
+                    if (pacmanY < canvas.height) pacmanY += PACMAN_SPEED;
+                    break;
+            }
+
+            // Move Ghosts towards Pacman if close and not currently chasing
+            for (let ghost of ghosts) {
+                if (!chasing && Math.abs(ghost.x - pacmanX) < CHASE_DISTANCE && Math.abs(ghost.y - pacmanY) < CHASE_DISTANCE) {
+                    chaseTimer = setTimeout(() => {
+                        chasing = false;
+                    }, CHASE_DURATION);
+                    chasing = true;
+                }
+
+                if (chasing) {
+                    if (ghost.x < pacmanX) ghost.x += ghostSpeed;
+                    else if (ghost.x > pacmanX) ghost.x -= ghostSpeed;
+                    if (ghost.y < pacmanY) ghost.y += ghostSpeed;
+                    else if (ghost.y > pacmanY) ghost.y -= ghostSpeed;
+                }
+
+                // Check collision with ghost
+                if (checkCollision(pacmanX, pacmanY, ghost.x, ghost.y, GRID_SIZE / 2, GRID_SIZE / 2)) {
+                    // Pacman touched by ghost, lose a heart
+                    hearts--;
+                    if (hearts === 0) {
+                        // Game over, reset
+                        alert("Game over!");
+                        score = 0;
+                        hearts = INITIAL_HEARTS;
+                        currentQuestionIndex = 0; // Reset question index to cycle infinitely
+                        shuffle(pellets);
+                        ghosts = [{ x: Math.random() * canvas.width, y: Math.random() * canvas.height }];
+                    }
+                    // Move Pacman back to the center
+                    pacmanX = canvas.width / 2;
+                    pacmanY = canvas.height / 2;
+                }
+            }
+
+            // Check collision with pellets
+            for (let pellet of pellets) {
+                if (!pellet.eaten && checkCollision(pacmanX, pacmanY, pellet.x, pellet.y, GRID_SIZE / 2, GRID_SIZE / 2)) {
+                    pellet.eaten = true;
+                    if (pellet.name === pellets[currentQuestionIndex].name) {
+                        // Correct word eaten, increase score
+                        score++;
+                        if (score % MAX_SCORE === 0) {
+                            // Add a new ghost
+                            ghosts.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
+                        }
+                        currentQuestionIndex = (currentQuestionIndex + 1) % pellets.length; // Cycle through questions
+                    } else {
+                        // Incorrect word eaten, lose a heart
+                        hearts--;
+                        if (hearts === 0) {
+                            // Game over, reset
+                            alert("Game over!");
+                            score = 0;
+                            hearts = INITIAL_HEARTS;
+                            currentQuestionIndex = 0; // Reset question index to cycle infinitely
+                            shuffle(pellets);
+                            ghosts = [{ x: Math.random() * canvas.width, y: Math.random() * canvas.height }];
+                        }
+                    }
+                    // Move pellet to a random position
+                    pellet.x = Math.random() * canvas.width;
+                    pellet.y = Math.random() * canvas.height;
+                    pellet.eaten = false; // Reset eaten flag
+                    break;
+                }
+            }
+
+            // Request next frame
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Keyboard input
+        window.addEventListener('keydown', function(event) {
+            switch (event.key) {
+                case 'ArrowLeft':
+                    pacmanDir = 'LEFT';
+                    break;
+                case 'ArrowRight':
+                    pacmanDir = 'RIGHT';
+                    break;
+                case 'ArrowUp':
+                    pacmanDir = 'UP';
+                    break;
+                case 'ArrowDown':
+                    pacmanDir = 'DOWN';
+                    break;
+            }
+        });
+
+        // Initialize the game
+        shuffle(pellets);
+        generatePelletPositions().forEach((position, index) => {
+            pellets[index].x = position.x;
+            pellets[index].y = position.y;
+        });
+        gameLoop();
+    </script>
+</body>
+</html>
