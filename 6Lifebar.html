@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Street Fighter Life Bar</title>
+<style>
+  .life-bar-container {
+    position: relative;
+    width: 400px; /* Adjusted width for the additional section */
+    margin: 20px auto;
+  }
+  .life-bar {
+    width: calc(100% - 30px); /* Adjusted width to accommodate the reset button */
+    height: 30px;
+    background-color: black;
+    border: 4px solid silver;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden; /* Ensures that the rounded corners are respected */
+    display: inline-block;
+  }
+  .life-section {
+    height: 100%;
+    position: absolute;
+    transition: width 0.5s ease-out; /* Changed transition timing function */
+  }
+  .section-1 { background: linear-gradient(to right, #00FF00 0%, #66FF33 100%); left: 0; }
+  .section-2 { background: linear-gradient(to right, #66FF33 0%, #FFFF00 100%); left: 16.66%; }
+  .section-3 { background: linear-gradient(to right, #FFFF00 0%, #FFA500 100%); left: 33.33%; }
+  .section-4 { background: linear-gradient(to right, #FFA500 0%, #FF4500 100%); left: 50%; }
+  .section-5 { background: linear-gradient(to right, #FF4500 0%, #FF0000 100%); left: 66.66%; }
+  .section-6 { background: #FF0000; left: 83.33%; }
+  
+  .reset-button {
+    position: absolute;
+    top: 50%;
+    right: -25px; /* Adjusted position to be outside the life bar */
+    transform: translateY(-50%);
+    padding: 5px 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="life-bar-container">
+  <div class="life-bar" onclick="decreaseLife()">
+    <div class="life-section section-1" style="width: 16.66%;"></div>
+    <div class="life-section section-2" style="width: 16.66%;"></div>
+    <div class="life-section section-3" style="width: 16.66%;"></div>
+    <div class="life-section section-4" style="width: 16.66%;"></div>
+    <div class="life-section section-5" style="width: 16.66%;"></div>
+    <div class="life-section section-6" style="width: 16.66%;"></div>
+  </div>
+  <button class="reset-button" onclick="resetColors()">Reset</button>
+</div>
+
+<script>
+function decreaseLife() {
+  var sections = document.querySelectorAll('.life-section');
+  for (var i = 0; i < sections.length; i++) {
+    if (sections[i].style.width !== '0%') {
+      sections[i].style.width = '0%';
+      break;
+    }
+  }
+}
+
+function resetColors() {
+  var sections = document.querySelectorAll('.life-section');
+  var colors = ['#00FF00', '#66FF33', '#FFFF00', '#FFA500', '#FF4500', '#FF0000'];
+  for (var i = 0; i < sections.length; i++) {
+    sections[i].style.width = '16.66%';
+    sections[i].style.background = 'linear-gradient(to right, ' + colors[i] + ' 0%, ' + colors[i + 1] + ' 100%)';
+  }
+}
+</script>
+
+</body>
+</html>
