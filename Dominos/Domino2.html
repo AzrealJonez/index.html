@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotating Domino</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .domino {
+            width: 100px;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            transform-origin: center;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .domino img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .top, .bottom {
+            flex: 1;
+        }
+        .separator {
+            width: 100%;
+            height: 2px;
+            background-color: #000000;
+            position: absolute;
+            top: 50%;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="domino" id="domino">
+    <div class="top">
+        <img src="weather-03.png" alt="Top Image">
+    </div>
+    <div class="separator"></div>
+    <div class="bottom">
+        <img src="weather-04.png" alt="Bottom Image">
+    </div>
+</div>
+
+<script>
+    const domino = document.getElementById('domino');
+    let rotation = 0;
+
+    domino.addEventListener('click', () => {
+        rotation = (rotation + 90) % 360;
+        domino.style.transform = `rotate(${rotation}deg)`;
+    });
+</script>
+
+</body>
+</html>
