@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plinko Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        #game-container {
+            position: relative;
+        }
+        #plinko-board {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background-color: #444;
+            border: 5px solid #333;
+            overflow: hidden;
+        }
+        .peg {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+        .disc {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+        }
+        .bucket {
+            position: absolute;
+            width: calc(100% / 6);
+            height: 50px;
+            bottom: 0;
+            background-color: #555;
+            border: 1px solid #333;
+        }
+        #play-again {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="plinko-board"></div>
+        <button id="play-again">Play Again</button>
+    </div>
+    <script>
+        const board = document.getElementById('plinko-board');
+        const boardWidth = board.clientWidth;
+        const boardHeight = board.clientHeight;
+        const pegSpacing = 50;
+        const discSize = 30;
+        const pegSize = 10;
+        const rows = Math.floor(boardHeight / pegSpacing);
+        const cols = Math.floor(boardWidth / pegSpacing);
+        let gameOver = false;
+
+        // Create pegs
+        for (let row = 1; row < rows; row++) {
+            for (let col = 0; col <= cols; col++) {
+                const peg = document.createElement('div');
+                peg.classList.add('peg');
+                peg.style.left = `${col * pegSpacing - pegSize / 2}px`;
+                peg.style.top = `${row * pegSpacing - pegSize / 2}px`;
+                board.appendChild(peg);
+            }
+        }
+
+        // Create buckets
+        for (let i = 0; i < 6; i++) {
+            const bucket = document.createElement('div');
+            bucket.classList.add('bucket');
+            bucket.style.left = `${i * (boardWidth / 6)}px`;
+            board.appendChild(bucket);
+        }
+
+        // Create and drop the disc
+        function dropDisc() {
+            const disc = document.createElement('div');
+            disc.classList.add('disc');
+            disc.style.left = `${Math.random() * (boardWidth - discSize)}px`;
+            board.appendChild(disc);
+
+            let x = parseInt(disc.style.left);
+            let y = 0;
+            let xVelocity = 0;
+            const gravity = 5; // Increase the fall speed
+
+            const interval = setInterval(() => {
+                y += gravity;
+                x += xVelocity;
+
+                const pegElements = document.getElementsByClassName('peg');
+                for (let peg of pegElements) {
+                    const pegX = parseInt(peg.style.left) + pegSize / 2;
+                    const pegY = parseInt(peg.style.top) + pegSize / 2;
+
+                    const dx = x + discSize / 2 - pegX;
+                    const dy = y + discSize / 2 - pegY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < (discSize + pegSize) / 2) {
+                        xVelocity = (Math.random() - 0.5) * 10; // Randomize bounce direction and increase velocity
+                    }
+                }
+
+                if (x < 0) x = 0;
+                if (x > boardWidth - discSize) x = boardWidth - discSize;
+
+                disc.style.top = `${y}px`;
+                disc.style.left = `${x}px`;
+
+                if (y > boardHeight - discSize) {
+                    clearInterval(interval);
+                    gameOver = true;
+                    console.log('Disc landed in bucket:', Math.floor(x / (boardWidth / 6)));
+                    document.getElementById('play-again').style.display = 'block';
+                }
+            }, 30);
+        }
+
+        // Drop the disc once after 2 seconds
+        setTimeout(dropDisc, 2000);
+
+        // Play again button event listener
+        document.getElementById('play-again').addEventListener('click', () => {
+            if (!gameOver) return;
+            const disc = document.querySelector('.disc');
+            if (disc) disc.remove();
+            document.getElementById('play-again').style.display = 'none';
+            dropDisc();
+            gameOver = false;
+        });
+    </script>
+</body>
+</html>
