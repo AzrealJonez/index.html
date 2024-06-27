@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Square Grid</title>
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(7, 150px);
+            grid-template-rows: repeat(1, 100px);
+            gap: 5px;
+            position: relative;
+        }
+        .grid-item {
+            width: 150px;
+            height: 100px;
+            border: 1px solid black;
+            background-color: transparent;
+            position: relative;
+        }
+        .red-dot {
+            width: 11px; /* 10% bigger than the original 10px */
+            height: 11px; /* 10% bigger than the original 10px */
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="grid-container">
+    <!-- Generating 7 grid items -->
+    <div class="grid-item" id="grid-item-0"></div>
+    <div class="grid-item" id="grid-item-1"></div>
+    <div class="grid-item" id="grid-item-2"></div>
+    <div class="grid-item" id="grid-item-3"></div>
+    <div class="grid-item" id="grid-item-4"></div>
+    <div class="grid-item" id="grid-item-5"></div>
+    <div class="grid-item" id="grid-item-6"></div>
+</div>
+
+<button onclick="selectRandomSquare()">Select Random Square</button>
+
+<script>
+    let currentDot = null;
+
+    function selectRandomSquare() {
+        // Remove the current red dot if it exists
+        if (currentDot) {
+            currentDot.remove();
+        }
+
+        // Generate a random number between 0 and 6
+        const randomIndex = Math.floor(Math.random() * 7);
+
+        // Get the random grid item
+        const randomGridItem = document.getElementById('grid-item-' + randomIndex);
+
+        // Create a new red dot
+        const redDot = document.createElement('div');
+        redDot.classList.add('red-dot');
+
+        // Append the red dot to the random grid item
+        randomGridItem.appendChild(redDot);
+
+        // Update the current dot reference
+        currentDot = redDot;
+    }
+</script>
+
+</body>
+</html>
