@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .life-bar-container {
+            width: 50px;
+            height: 300px;
+            border: 3px solid #333;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            background: transparent; /* Transparent background */
+        }
+        .life-bar {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            transition: height 0.3s;
+            background: linear-gradient(to top, red, green);
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="life-bar-container">
+        <div class="life-bar" id="lifeBar"></div>
+    </div>
+
+    <div class="buttons">
+        <button onclick="increaseLife()">+</button>
+        <button onclick="decreaseLife()">-</button>
+    </div>
+
+    <script>
+        const maxLife = 7;
+        let currentLife = maxLife;
+
+        function updateLifeBar() {
+            const lifeBar = document.getElementById('lifeBar');
+            const lifePercentage = (currentLife / maxLife) * 100;
+            lifeBar.style.height = lifePercentage + '%';
+        }
+
+        function increaseLife() {
+            if (currentLife < maxLife) {
+                currentLife++;
+                updateLifeBar();
+            }
+        }
+
+        function decreaseLife() {
+            if (currentLife > 0) {
+                currentLife--;
+                updateLifeBar();
+            }
+        }
+
+        // Initialize the life bar to full life
+        updateLifeBar();
+    </script>
+
+</body>
+</html>
