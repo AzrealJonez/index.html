@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Street Fighter Style Life Bar</title>
+  <style>
+    .life-bar-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .life-bar {
+      width: 500px; /* Longer */
+      height: 20px; /* Thinner */
+      background-color: transparent; /* Transparent background */
+      border: 2px solid #333;
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .life-bar-inner {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, red 0%, yellow 50%, green 100%);
+      transition: width 0.3s ease;
+      transform-origin: left center; /* Ensures it shrinks from left to right */
+    }
+
+    .reset-btn {
+      margin-top: 20px;
+      padding: 5px 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .reset-btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="life-bar-container">
+    <div id="lifeBar" class="life-bar" onclick="decreaseHealth()">
+      <div id="lifeBarInner" class="life-bar-inner"></div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetHealth()">Reset Life Bar</button>
+
+  <script>
+    let lifeBarInner = document.getElementById('lifeBarInner');
+    let maxHealth = 7;
+    let currentHealth = maxHealth;
+
+    function decreaseHealth() {
+      if (currentHealth > 0) {
+        currentHealth--;
+        let widthPercentage = (currentHealth / maxHealth) * 100;
+        lifeBarInner.style.width = widthPercentage + '%';
+      }
+    }
+
+    function resetHealth() {
+      currentHealth = maxHealth;
+      lifeBarInner.style.width = '100%';
+    }
+  </script>
+
+</body>
+</html>
