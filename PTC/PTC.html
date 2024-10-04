@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate Point Counter</title>
+    <style>
+        body {
+            font-family: 'Treasure Map Deadhand', cursive; /* Pirate-styled font */
+            background-color: transparent; /* A parchment-style background color */
+        }
+
+        #counter-container {
+            position: relative;
+            width: 200px; /* Set container size to fit the image */
+            height: 150px;
+            margin: 100px auto;
+            text-align: center;
+            background-image: url('PTC.png'); /* The image serves as the counter background */
+            background-size: cover; /* Ensures the image covers the container without distortion */
+            background-position: center;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        #points {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 10px;
+            color: white; /* Points color stands out against the image */
+        }
+
+        .btn {
+            background-color: #b5651d;
+            color: white;
+            font-size: 25px;
+            padding: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 40px;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background-color: #d67b28;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="counter-container">
+        <div id="points">0</div>
+        <button class="btn" onclick="decreasePoints()">-</button>
+        <button class="btn" onclick="increasePoints()">+</button>
+    </div>
+
+    <script>
+        let points = 0;
+
+        function increasePoints() {
+            points++;
+            document.getElementById('points').textContent = points;
+        }
+
+        function decreasePoints() {
+            if (points > 0) {
+                points--;
+            }
+            document.getElementById('points').textContent = points;
+        }
+    </script>
+
+</body>
+</html>
