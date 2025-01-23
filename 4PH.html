@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 Player Scorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        .scorers {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .player {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .buttons {
+            margin-top: 10px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .reset {
+            margin-top: 20px;
+            padding: 10px 30px;
+            font-size: 18px;
+            background-color: transparent;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="scorers">
+        <div id="player1" class="player">
+            <h2>Player 1</h2>
+            <input type="number" id="score1" value="0">
+            <div class="buttons">
+                <button onclick="updateScore('score1', 1)">+</button>
+                <button onclick="updateScore('score1', -1)">-</button>
+            </div>
+        </div>
+
+        <div id="player2" class="player">
+            <h2>Player 2</h2>
+            <input type="number" id="score2" value="0">
+            <div class="buttons">
+                <button onclick="updateScore('score2', 1)">+</button>
+                <button onclick="updateScore('score2', -1)">-</button>
+            </div>
+        </div>
+
+        <div id="player3" class="player">
+            <h2>Player 3</h2>
+            <input type="number" id="score3" value="0">
+            <div class="buttons">
+                <button onclick="updateScore('score3', 1)">+</button>
+                <button onclick="updateScore('score3', -1)">-</button>
+            </div>
+        </div>
+
+        <div id="player4" class="player">
+            <h2>Player 4</h2>
+            <input type="number" id="score4" value="0">
+            <div class="buttons">
+                <button onclick="updateScore('score4', 1)">+</button>
+                <button onclick="updateScore('score4', -1)">-</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="reset" onclick="resetScores()">Reset All Scores</button>
+
+    <script>
+        function updateScore(playerId, change) {
+            const scoreInput = document.getElementById(playerId);
+            let currentScore = parseInt(scoreInput.value);
+            if (!isNaN(currentScore)) {
+                scoreInput.value = currentScore + change;
+            } else {
+                scoreInput.value = 0;
+            }
+        }
+
+        function resetScores() {
+            const scoreInputs = document.querySelectorAll('input[type="number"]');
+            scoreInputs.forEach(input => input.value = 0);
+        }
+    </script>
+</body>
+</html>
