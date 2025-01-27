@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Drop</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: transparent;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        canvas {
+            display: block;
+            background: linear-gradient(135deg, #FFD700, #FFFACD);
+            border: 5px solid #000;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        #playAgain {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #FFD700;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #playAgain:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <button id="playAgain">Play Again</button>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const playAgainButton = document.getElementById('playAgain');
+
+        const initialWidth = 400;
+        const initialHeight = 600;
+
+        let numRows = 16;
+        let numCols = 10;
+
+        let pegRadius = initialWidth / 100;
+        let pegSpacing = initialWidth / (numCols + 1);
+        let pegVerticalSpacing = initialHeight / (numRows + 2);
+
+        let pegs = [];
+        let slots = [];
+        let slotWalls = [];
+        let slotWidth = initialWidth / 6;
+        let gameInProgress = true;
+
+        let disk = {
+            x: Math.random() * initialWidth,
+            y: 0,
+            radius: initialWidth / 50,
+            dx: 0,
+            dy: 5,
+        };
+
+        function resizeCanvas() {
+            const scaleFactor = Math.min(
+                window.innerWidth / initialWidth,
+                window.innerHeight / initialHeight,
+                1
+            );
+
+            canvas.width = initialWidth * scaleFactor;
+            canvas.height = initialHeight * scaleFactor;
+
+            pegRadius = canvas.width / 100;
+            pegSpacing = canvas.width / (numCols + 1);
+            pegVerticalSpacing = canvas.height / (numRows + 2);
+            disk.radius = canvas.width / 50;
+            slotWidth = canvas.width / 6;
+
+            playAgainButton.style.transform = `scale(${scaleFactor})`;
+            playAgainButton.style.marginTop = `${10 * scaleFactor}px`;
+            playAgainButton.style.fontSize = `${16 * scaleFactor}px`;
+
+            initializeGame();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        const colors = {
+            background: 'gold',
+            pegs: '#000',
+            disk: '#FF4500',
+        };
+
+        function initializeGame() {
+            pegs = [];
+            slots = [];
+            slotWalls = [];
+            createPegs();
+            createSlots();
+        }
+
+        function createPegs() {
+            for (let row = 0; row < numRows; row++) {
+                for (let col = 0; col < numCols; col++) {
+                    const x = pegSpacing * (col + 1) + (row % 2 === 0 ? 0 : pegSpacing / 2);
+                    const y = pegVerticalSpacing * (row + 1);
+                    pegs.push({ x, y });
+                }
+            }
+        }
+
+        function createSlots() {
+            for (let i = 0; i < 6; i++) {
+                const x = i * slotWidth;
+                slots.push(x + slotWidth / 2);
+                slotWalls.push({ x: x + slotWidth, y: canvas.height - 60 });
+            }
+        }
+
+        function drawBackground() {
+            ctx.fillStyle = colors.background;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawPegs() {
+            ctx.fillStyle = colors.pegs;
+            pegs.forEach(peg => {
+                ctx.beginPath();
+                ctx.arc(peg.x, peg.y, pegRadius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function drawSlots() {
+            slots.forEach(slot => {
+                ctx.fillStyle = '#FFF';
+                ctx.fillRect(slot - slotWidth / 2, canvas.height - 60, slotWidth, 60);
+            });
+            slotWalls.forEach(wall => {
+                ctx.fillStyle = '#000';
+                ctx.fillRect(wall.x - 1, wall.y, 2, 60);
+            });
+        }
+
+        function drawDisk() {
+            ctx.fillStyle = colors.disk;
+            ctx.beginPath();
+            ctx.arc(disk.x, disk.y, disk.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function updateDisk() {
+            disk.y += disk.dy;
+            disk.x += disk.dx;
+
+            pegs.forEach(peg => {
+                const dx = disk.x - peg.x;
+                const dy = disk.y - peg.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance <= disk.radius + pegRadius) {
+                    disk.dx = Math.random() > 0.5 ? 2 : -2;
+                    disk.dy = 5;
+                }
+            });
+
+            if (disk.x - disk.radius <= 0 || disk.x + disk.radius >= canvas.width) {
+                disk.dx = -disk.dx;
+            }
+
+            slotWalls.forEach(wall => {
+                if (
+                    disk.x + disk.radius > wall.x - 1 &&
+                    disk.x - disk.radius < wall.x + 1 &&
+                    disk.y + disk.radius >= wall.y
+                ) {
+                    disk.dx = -disk.dx;
+                }
+            });
+
+            if (disk.y + disk.radius >= canvas.height - 60) {
+                slots.forEach(slot => {
+                    if (
+                        disk.x > slot - slotWidth / 2 &&
+                        disk.x < slot + slotWidth / 2
+                    ) {
+                        disk.y = canvas.height - 30;
+                        disk.dx = 0;
+                        disk.dy = 0;
+                        gameInProgress = false;
+                        playAgainButton.style.display = 'block';
+                    }
+                });
+            }
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground();
+            drawPegs();
+            drawSlots();
+            drawDisk();
+
+            if (gameInProgress) {
+                updateDisk();
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        playAgainButton.addEventListener('click', () => {
+            disk.x = Math.random() * canvas.width;
+            disk.y = 0;
+            disk.dx = 0;
+            disk.dy = 5;
+            gameInProgress = true;
+            playAgainButton.style.display = 'none';
+            gameLoop();
+        });
+
+        resizeCanvas();
+        gameLoop();
+    </script>
+</body>
+</html>
