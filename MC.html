@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Counter</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: transparent;
+        }
+
+        .money-counter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: transparent;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: calc(10px + 1vw);
+        }
+
+        .money-display {
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .money-display .currency {
+            color: green;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .money-button {
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.5em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .money-button:hover {
+            transform: scale(1.1);
+        }
+
+        .money-button:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 600px) {
+            .money-display {
+                font-size: 1.5em;
+            }
+
+            .money-button {
+                width: 30px;
+                height: 30px;
+                font-size: 0.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="money-counter">
+        <div class="money-display">
+            <span class="currency">$</span><span id="money-amount">0</span>
+        </div>
+        <div class="button-group">
+            <button class="money-button" onclick="adjustMoney(10)">+10</button>
+            <button class="money-button" onclick="adjustMoney(25)">+25</button>
+            <button class="money-button" onclick="adjustMoney(50)">+50</button>
+            <button class="money-button" onclick="adjustMoney(100)">+100</button>
+            <button class="money-button" onclick="adjustMoney(-100)">-100</button>
+            <button class="money-button" onclick="adjustMoney(-50)">-50</button>
+            <button class="money-button" onclick="adjustMoney(-25)">-25</button>
+            <button class="money-button" onclick="adjustMoney(-10)">-10</button>
+        </div>
+    </div>
+
+    <script>
+        let moneyAmount = 0;
+
+        function adjustMoney(amount) {
+            moneyAmount += amount;
+            if (moneyAmount < 0) moneyAmount = 0;
+            document.getElementById('money-amount').textContent = moneyAmount;
+        }
+    </script>
+</body>
+</html>
