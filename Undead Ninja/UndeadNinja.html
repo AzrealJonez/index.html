@@ -16,18 +16,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 10px;
         }
         .display {
             color: red;
         }
         #hint img {
-            height: 90px;
+            height: 75px;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas" width="600" height="450"></canvas>
     <div id="hint" class="display" style="display: flex; align-items: center; gap: 20px;"></div>
     
     <div id="life-container">
@@ -39,8 +39,8 @@
             const canvas = document.getElementById("gameCanvas");
             const ctx = canvas.getContext("2d");
             
-            const ZOMBIE_SIZE = 85;
-            let ZOMBIE_SPEED = 1.5;
+            const ZOMBIE_SIZE = 64;
+            let ZOMBIE_SPEED = 1;
             let score = 0;
             let lives = 5;
             const zombies = [];
