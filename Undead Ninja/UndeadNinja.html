@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undead Ninja Click Game</title>
+    <style>
+        canvas {
+            border: 2px solid black;
+            display: block;
+            margin: 0 auto;
+        }
+        #hint, #life-container {
+            text-align: center;
+            font-size: 34px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .display {
+            color: red;
+        }
+        #hint img {
+            height: 90px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="hint" class="display" style="display: flex; align-items: center; gap: 20px;"></div>
+    
+    <div id="life-container">
+        <div id="life" class="display"></div>
+        
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const canvas = document.getElementById("gameCanvas");
+            const ctx = canvas.getContext("2d");
+            
+            const ZOMBIE_SIZE = 85;
+            let ZOMBIE_SPEED = 1.5;
+            let score = 0;
+            let lives = 5;
+            const zombies = [];
+
+            const zombieImages = {};
+            const imageNames = ["walker", "crawler", "runner", "ghoul", "lurker", "stalker", "biter", "shambler", "roamer"];
+            
+            imageNames.forEach(name => {
+                const img = new Image();
+                img.src = `${name}.png`;
+                zombieImages[name] = img;
+            });
+
+            const hintDiv = document.getElementById("hint");
+            let currentHint = getRandomHint();
+            updateHintImage();
+
+            const lifeDiv = document.getElementById("life");
+            updateLivesDisplay();
+
+            
+
+            function updateHintImage() {
+                hintDiv.innerHTML = `<img src="${currentHint}.png" alt="Hint">`;
+            }
+
+            canvas.addEventListener("click", (event) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const mouseX = (event.clientX - rect.left) * scaleX;
+                const mouseY = (event.clientY - rect.top) * scaleY;
+                
+                let zombieClicked = false;
+
+                for (let i = zombies.length - 1; i >= 0; i--) {
+                    const zombie = zombies[i];
+                    const dx = mouseX - (zombie.x + ZOMBIE_SIZE / 2);
+                    const dy = mouseY - (zombie.y + ZOMBIE_SIZE / 2);
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance <= ZOMBIE_SIZE / 2) {
+                        zombies.splice(i, 1);
+                        zombieClicked = true;
+                        handleZombieClick(zombie.name);
+                        break;
+                    }
+                }
+
+                if (!zombieClicked) handleMissedClick();
+            });
+
+            function handleZombieClick(name) {
+                if (name === currentHint) {
+                    score++;
+                    if (score % 5 === 0) ZOMBIE_SPEED += 0.5;
+                    currentHint = getRandomHint();
+                    updateHintImage();
+                } else {
+                    decreaseLife();
+                }
+            }
+
+            function handleMissedClick() {
+                decreaseLife();
+            }
+
+            function decreaseLife() {
+                if (--lives <= 0) {
+                    alert(`Game Over! Your score: ${score}`);
+                    location.reload();
+                } else {
+                    updateLivesDisplay();
+                }
+            }
+
+            function updateLivesDisplay() {
+                lifeDiv.textContent = `Lives: ${"🧟".repeat(lives)}`;
+            }
+
+            function getRandomHint() {
+                return imageNames[Math.floor(Math.random() * imageNames.length)];
+            }
+
+            function mainLoop() {
+                ctx.fillStyle = '#333';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                if (Math.random() < 0.05) {
+                    const randomZombieName = getRandomHint();
+                    zombies.push({ x: Math.random() * (canvas.width - ZOMBIE_SIZE), y: -ZOMBIE_SIZE, name: randomZombieName });
+                }
+                zombies.forEach(zombie => {
+                    zombie.y += ZOMBIE_SPEED;
+                    ctx.drawImage(zombieImages[zombie.name], zombie.x, zombie.y, ZOMBIE_SIZE, ZOMBIE_SIZE);
+                });
+                ctx.fillStyle = "red";
+                ctx.font = "34px Arial";
+                ctx.fillText(`Score: ${score}`, 20, 30);
+                requestAnimationFrame(mainLoop);
+            }
+
+            mainLoop();
+        });
+    </script>
+</body>
+</html>
