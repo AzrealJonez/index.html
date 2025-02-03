@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ninja Life Bar</title>
+    <style>
+        body {
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .life-bar {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .star {
+            width: 30px;
+            height: 30px;
+            background-color: transparent;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+        button {
+            cursor: pointer;
+            padding: 5px;
+            font-size: 14px;
+            border: none;
+            background: black;
+            color: white;
+            border-radius: 3px;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="life-bar" id="lifeBar">
+        <img src="NStar.png" class="star" alt="Ninja Star">
+        <img src="NStar.png" class="star" alt="Ninja Star">
+        <img src="NStar.png" class="star" alt="Ninja Star">
+    </div>
+    <div class="controls">
+        <button onclick="addStar()">+</button>
+        <button onclick="removeStar()">-</button>
+    </div>
+    
+    <script>
+        function addStar() {
+            const lifeBar = document.getElementById('lifeBar');
+            const star = document.createElement('img');
+            star.src = "NStar.png";
+            star.classList.add('star');
+            star.alt = "Ninja Star";
+            lifeBar.appendChild(star);
+        }
+        
+        function removeStar() {
+            const lifeBar = document.getElementById('lifeBar');
+            if (lifeBar.children.length > 0) {
+                lifeBar.removeChild(lifeBar.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>
