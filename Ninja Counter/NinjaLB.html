@@ -15,10 +15,12 @@
         }
         .life-bar {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             gap: 5px;
             padding: 10px;
             border-radius: 5px;
+            max-width: 240px;
         }
         .star {
             width: 30px;
@@ -56,11 +58,15 @@
     <script>
         function addStar() {
             const lifeBar = document.getElementById('lifeBar');
-            const star = document.createElement('img');
-            star.src = "NStar.png";
-            star.classList.add('star');
-            star.alt = "Ninja Star";
-            lifeBar.appendChild(star);
+            if (lifeBar.children.length < 14) {
+                const star = document.createElement('img');
+                star.src = "NStar.png";
+                star.classList.add('star');
+                star.alt = "Ninja Star";
+                lifeBar.appendChild(star);
+            } else {
+                alert("Champion!");
+            }
         }
         
         function removeStar() {
